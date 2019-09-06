@@ -17,13 +17,13 @@ public class JsonUtils {
 
     public static Sandwich parseSandwichJson(String json) {
         //Parse JSON to sandwich obj
-        Log.i(TAG , json+"");
+        Log.i(TAG, json + "");
 
         //Model Obj
-        Sandwich sandwichModel= new Sandwich() ;
+        Sandwich sandwichModel = new Sandwich();
 
         //check the json is not null
-        if(json != null ){
+        if (json != null) {
 
             try {
                 // root obj
@@ -31,7 +31,7 @@ public class JsonUtils {
 
                 //Name obj
                 JSONObject nameObj = baseObj.getJSONObject("name");
-                String name= nameObj.getString("mainName");
+                String name = nameObj.getString("mainName");
                 JSONArray otherNames = nameObj.getJSONArray("alsoKnownAs");
                 // fill the list with JSONArray
                 List<String> alsoKnownAs = toStringList(otherNames);
@@ -40,35 +40,31 @@ public class JsonUtils {
                 //Desc obj
                 String description = baseObj.getString("description");
                 //image obj
-                String imageURL= baseObj.getString("image");
+                String imageURL = baseObj.getString("image");
                 // ingredients obj
-                JSONArray ingredients= baseObj.getJSONArray("ingredients");
+                JSONArray ingredients = baseObj.getJSONArray("ingredients");
                 // fill the list with JSONArray
                 List<String> ingredientsList = toStringList(ingredients);
 
-                sandwichModel = new Sandwich(name, alsoKnownAs , placeOfOrigin, description , imageURL , ingredientsList);
+                sandwichModel = new Sandwich(name, alsoKnownAs, placeOfOrigin, description, imageURL, ingredientsList);
 
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return  sandwichModel ;
+            return sandwichModel;
 
-        }else
+        } else
             return null;
-
-
-
-
-
     }
+
     // Method to convert JsonArray to List of Strings
     private static List<String> toStringList(JSONArray array) throws JSONException {
-        if(array==null)
+        if (array == null)
             return null;
 
-        List<String> paredList =new ArrayList<>();
-        for(int i=0; i < array.length(); i++) {
+        List<String> paredList = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
             paredList.add(array.getString(i));
         }
         return paredList;
