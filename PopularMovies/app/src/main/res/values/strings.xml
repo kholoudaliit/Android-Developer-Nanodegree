@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="sort">sort</string>
+    <string name="popular_movies">Popular Movies</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="moive_title">Moive Title</string>
+    <string name="moive_rating">Moive rating</string>
+    <string name="moive_poster">Moive poster</string>
+    <string name="moive_year">Year</string>
+    <string name="title_activity_movie">MovieActivity</string>
+    <string name="movie_overview">Overview</string>
+    <string name="movie_language">Language</string>
+    <string name="rating">Rating</string>
+</resources>
