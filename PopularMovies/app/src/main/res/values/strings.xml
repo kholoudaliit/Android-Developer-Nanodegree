@@ -11,4 +11,9 @@
     <string name="movie_overview">Overview</string>
     <string name="movie_language">Language</string>
     <string name="rating">Rating</string>
+    <string name="share">Share</string>
+    <string name="favorite">Favorite</string>
+    <string name="trailers">Trailer</string>
+    <string name="reviews">Reviews:</string>
+    <string name="favorite_movies">Favorite Movies</string>
 </resources>

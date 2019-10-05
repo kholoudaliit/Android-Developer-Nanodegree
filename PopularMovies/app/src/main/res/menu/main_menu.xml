@@ -20,6 +20,11 @@
                     android:id="@+id/action_top_rated"
                     android:title="@string/top_rated" />
 
+                <item
+                    android:id="@+id/action_fav"
+                    android:title="@string/favorite_movies" />
+
+
             </group>
         </menu>
     </item>

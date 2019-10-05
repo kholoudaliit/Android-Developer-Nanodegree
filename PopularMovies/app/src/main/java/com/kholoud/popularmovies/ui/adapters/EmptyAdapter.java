@@ -1,4 +1,4 @@
-package com.kholoud.popularmovies.adapter;
+package com.kholoud.popularmovies.ui.adapters;
 
 import android.view.ViewGroup;
 

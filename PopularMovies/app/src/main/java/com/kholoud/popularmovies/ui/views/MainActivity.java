@@ -1,9 +1,4 @@
-package com.kholoud.popularmovies.views;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+package com.kholoud.popularmovies.ui.views;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -22,31 +24,37 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kholoud.popularmovies.BuildConfig;
 import com.kholoud.popularmovies.R;
-import com.kholoud.popularmovies.adapter.EmptyAdapter;
-import com.kholoud.popularmovies.adapter.MoviesAdapter;
-import com.kholoud.popularmovies.moivesdbapi.models.Movie;
-import com.kholoud.popularmovies.moivesdbapi.models.MoviesList;
+import com.kholoud.popularmovies.data.models.Movie;
+import com.kholoud.popularmovies.data.models.MoviesList;
+import com.kholoud.popularmovies.ui.adapters.EmptyAdapter;
+import com.kholoud.popularmovies.ui.adapters.MoviesAdapter;
 import com.kholoud.popularmovies.utils.InternetCheck;
 import com.kholoud.popularmovies.utils.Singletone;
+import com.kholoud.popularmovies.viewmodels.MovieViewModel;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.ListItemClickListener {
+    public static final String POPULAR = "popular";
+    public static final String TOPRATED = "top_rated";
+    public static final String FAV = "Favourite Movies";
     private static final String MY_PREFS_NAME = "MoviePref";
+    public static String moivesdbBaseURL = "http://api.themoviedb.org/3/movie/";
+    public static String moivesdb_apiKey = BuildConfig.moviedb_apikey; //removed for legal issues
+    public static String moviedbURL = "";
+    private static Gson gson;
+    String savedQueryType;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private MoviesAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private SwipeRefreshLayout refreshLayout;
     private MoviesList moives;
     private TextView emptyView;
     private MoviesList moviesList;
     private SharedPreferences.Editor editor;
-    String savedQueryType;
-
-    private static Gson gson;
-    public static String moivesdbBaseURL = "http://api.themoviedb.org/3/movie/";
-    public static String moivesdb_apiKey = BuildConfig.moviedb_apikey; //remove for legal issues
-    public static String moviedbURL = "";
+    private MovieViewModel viewModel;
 
 
     @Override
@@ -64,8 +72,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
         // get saved option for SharedPrefrences
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        savedQueryType = prefs.getString("sortOption", "popular");// "popular" is the default value.
-
+        savedQueryType = prefs.getString("sortOption", POPULAR);// "popular" is the default value.
+        setTitle(savedQueryType.toUpperCase());
         // RecycleView stuff
         recyclerView.setHasFixedSize(true);
         // use a linear GrideLayout manager
@@ -77,6 +85,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
             getMovies(savedQueryType);
             refreshLayout.setRefreshing(false);
         });
+
+        // init ViewMode
+        viewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
+
+        mAdapter = new MoviesAdapter(MainActivity.this);
+        recyclerView.setAdapter(mAdapter);
+
 
         // check internet connection
         // then get Movies and set adapter
@@ -93,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         });
 
 
-
     }
 
     private void initViews() {
@@ -106,28 +120,42 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
     public MoviesList getMovies(String QUERY_TYPE) {
 
-        moviedbURL = moivesdbBaseURL + QUERY_TYPE + "?api_key=" + moivesdb_apiKey;
-        moviesList = new MoviesList();
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, moviedbURL, null, new Response.Listener<JSONObject>() {
+        if (QUERY_TYPE.contains(FAV)) { // Fav sort option selected so get movies from loca db
+            viewModel.getAllFavMovie().observe(this, new Observer<List<Movie>>() {
+                @Override
+                public void onChanged(List<Movie> movies) {
+                    if (movies.isEmpty()) {
+                        mAdapter.setMoives(movies);
+                        emptyView.setVisibility(View.VISIBLE);
+                    } else
+                        mAdapter.setMoives(movies);
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        MoviesList moviesList = gson.fromJson(String.valueOf(response), MoviesList.class);
-                        Log.d("Response: ", response.toString());
-                        mAdapter = new MoviesAdapter(moviesList.getResults() , MainActivity.this::onListItemClick);
-                        recyclerView.setAdapter(mAdapter);
-                        mAdapter.notifyDataSetChanged();
-                        emptyView.setVisibility(View.INVISIBLE);
+                }
+            });
 
-                    }
-                }, error -> {
-                    //TODO
-                });
+        } else {
 
-        // Access the RequestQueue through  singleton class.
-        Singletone.getInstance(this).addToRequestQueue(jsonObjectRequest);
+            moviedbURL = moivesdbBaseURL + QUERY_TYPE + "?api_key=" + moivesdb_apiKey;
+            moviesList = new MoviesList();
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                    (Request.Method.GET, moviedbURL, null, new Response.Listener<JSONObject>() {
 
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            moviesList = gson.fromJson(String.valueOf(response), MoviesList.class);
+                            Log.d("Response: ", response.toString());
+                            mAdapter.setMoives(moviesList.getResults());
+                            mAdapter.notifyDataSetChanged();
+                            emptyView.setVisibility(View.INVISIBLE);
+
+                        }
+                    }, error -> {
+                        //TODO
+                    });
+
+            // Access the RequestQueue through  singleton class.
+            Singletone.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        }
         return moviesList;
     }
 
@@ -142,19 +170,29 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_popular_movies:
-                getMovies("popular");
+                getMovies(POPULAR);
+                setTitle(POPULAR.toUpperCase());
                 //save the option to SharedPrefrences
                 editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                editor.putString("sortOption", "popular");
-                editor.apply();
+                editor.putString("sortOption", POPULAR);
+                editor.commit();
                 return true;
             case R.id.action_top_rated:
-                getMovies("top_rated");
+                getMovies(TOPRATED);
+                setTitle(TOPRATED.toUpperCase());
                 //save the option to SharedPrefrences
                 editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                editor.putString("sortOption", "top_rated");
-                editor.apply();
+                editor.putString("sortOption", TOPRATED);
+                editor.commit();
                 return true;
+            case R.id.action_fav:
+                getMovies(FAV);
+                setTitle(FAV);
+                editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+                editor.putString("sortOption", FAV);
+                editor.apply();
+
+
             default:
                 return super.onOptionsItemSelected(item);
         }

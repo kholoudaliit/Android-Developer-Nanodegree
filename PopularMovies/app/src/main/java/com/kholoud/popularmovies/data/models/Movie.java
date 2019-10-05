@@ -1,4 +1,8 @@
-package com.kholoud.popularmovies.moivesdbapi.models;
+package com.kholoud.popularmovies.data.models;
+
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,9 +10,10 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class Movie implements Serializable
-{
+@Entity(tableName = "MovieDb")
+public class Movie implements Serializable {
 
+    private final static long serialVersionUID = -153058237367881020L;
     @SerializedName("popularity")
     @Expose
     private Double popularity;
@@ -23,6 +28,7 @@ public class Movie implements Serializable
     private String posterPath;
     @SerializedName("id")
     @Expose
+    @PrimaryKey
     private Integer id;
     @SerializedName("adult")
     @Expose
@@ -38,6 +44,7 @@ public class Movie implements Serializable
     private String originalTitle;
     @SerializedName("genre_ids")
     @Expose
+    @Ignore
     private List<Integer> genreIds = null;
     @SerializedName("title")
     @Expose
@@ -51,7 +58,25 @@ public class Movie implements Serializable
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
-    private final static long serialVersionUID = -153058237367881020L;
+    private boolean is_Fav;
+
+    public Movie(Double popularity, Integer voteCount, Boolean video, String posterPath, Integer id, Boolean adult, String backdropPath, String originalLanguage, String originalTitle, String title, Double voteAverage, String overview, String releaseDate, boolean is_Fav) {
+        this.popularity = popularity;
+        this.voteCount = voteCount;
+        this.video = video;
+        this.posterPath = posterPath;
+        this.id = id;
+        this.adult = adult;
+        this.backdropPath = backdropPath;
+        this.originalLanguage = originalLanguage;
+        this.originalTitle = originalTitle;
+        this.genreIds = genreIds;
+        this.title = title;
+        this.voteAverage = voteAverage;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.is_Fav = is_Fav;
+    }
 
     public Double getPopularity() {
         return popularity;
@@ -59,6 +84,14 @@ public class Movie implements Serializable
 
     public void setPopularity(Double popularity) {
         this.popularity = popularity;
+    }
+
+    public void setFav(boolean is_Fav) {
+        this.is_Fav = is_Fav;
+    }
+
+    public boolean is_Fav() {
+        return is_Fav;
     }
 
     public Integer getVoteCount() {

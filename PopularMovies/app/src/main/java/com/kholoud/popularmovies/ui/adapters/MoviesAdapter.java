@@ -1,20 +1,18 @@
-package com.kholoud.popularmovies.adapter;
-
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.kholoud.popularmovies.moivesdbapi.models.*;
+package com.kholoud.popularmovies.ui.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.kholoud.popularmovies.R;
+import com.kholoud.popularmovies.data.models.Movie;
 import com.kholoud.popularmovies.utils.Singletone;
 
 import java.util.List;
@@ -22,17 +20,12 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
 
-    private List<Movie> moviesList;
     final private ListItemClickListener mOnClickListener;
     Context context;
+    private List<Movie> moviesList;
 
-    public interface ListItemClickListener {
-        void onListItemClick(Movie clickedMovie);
-    }
-
-
-    public MoviesAdapter(List<Movie> moviesList, ListItemClickListener onClickListener) {
-        this.moviesList = moviesList;
+    public MoviesAdapter(ListItemClickListener onClickListener) {
+        //this.moviesList = moviesList;
         mOnClickListener = onClickListener;
     }
 
@@ -70,11 +63,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         holder.year.setText(movie.getReleaseDate());
     }
 
+    public void setMoives(List<Movie> movies) {
+        this.moviesList = movies;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return moviesList != null ? moviesList.size() : 0;
     }
 
+    public interface ListItemClickListener {
+        void onListItemClick(Movie clickedMovie);
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView title, rating, year;
