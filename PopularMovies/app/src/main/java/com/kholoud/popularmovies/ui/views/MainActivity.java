@@ -1,14 +1,18 @@
 package com.kholoud.popularmovies.ui.views;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -36,34 +40,46 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.kholoud.popularmovies.ui.adapters.MoviesAdapter.calculateNoOfColumns;
+
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.ListItemClickListener {
     public static final String POPULAR = "popular";
     public static final String TOPRATED = "top_rated";
     public static final String FAV = "Favourite Movies";
     private static final String MY_PREFS_NAME = "MoviePref";
+    private static final String RV_POSITION_INSTANCESTATE = "MOVIES_RECYCLE_STATE";
     public static String moivesdbBaseURL = "http://api.themoviedb.org/3/movie/";
     public static String moivesdb_apiKey = BuildConfig.moviedb_apikey; //removed for legal issues
     public static String moviedbURL = "";
     private static Gson gson;
     String savedQueryType;
-    private RecyclerView recyclerView;
+    @BindView(R.id.my_recycler_view)
+    RecyclerView recyclerView;
     private MoviesAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
     private MoviesList moives;
-    private TextView emptyView;
+    @BindView(R.id.list_empty)
+    TextView emptyView;
     private MoviesList moviesList;
     private SharedPreferences.Editor editor;
     private MovieViewModel viewModel;
+    private Parcelable savedRecyclerLayoutState;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        //Views
-        initViews();
+        if (savedInstanceState != null) {
+            savedRecyclerLayoutState = savedInstanceState.getParcelable(RV_POSITION_INSTANCESTATE);
+        }
 
         // init Gson object for pare JSON
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -77,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         // RecycleView stuff
         recyclerView.setHasFixedSize(true);
         // use a linear GrideLayout manager
-        layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new GridLayoutManager(this, calculateNoOfColumns(this));
         recyclerView.setLayoutManager(layoutManager);
 
         //refresh Listener
@@ -100,7 +116,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
                 getMovies(savedQueryType);
 
             } else {
-                Snackbar.make(findViewById(android.R.id.content), "No Internet Connection, Please try again", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(android.R.id.content), "No Internet Connection, Please try again", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Setting", v -> {
+                            Intent intent = new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS);
+                            startActivity(intent);
+                        }).show();
                 emptyView.setVisibility(View.VISIBLE);
                 recyclerView.setAdapter(new EmptyAdapter()); // for enable pullToRefresh behavoirs in empty list
             }
@@ -110,12 +130,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
 
     }
 
-    private void initViews() {
-        refreshLayout = findViewById(R.id.refresh_layout);
-        emptyView = findViewById(R.id.list_empty);
-        recyclerView = findViewById(R.id.my_recycler_view);
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(RV_POSITION_INSTANCESTATE, recyclerView.getLayoutManager().onSaveInstanceState());
     }
+
 
 
     public MoviesList getMovies(String QUERY_TYPE) {
@@ -127,6 +147,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
                     if (movies.isEmpty()) {
                         mAdapter.setMoives(movies);
                         emptyView.setVisibility(View.VISIBLE);
+                        if (savedRecyclerLayoutState != null) {
+                            layoutManager.onRestoreInstanceState(savedRecyclerLayoutState);
+                        }
                     } else
                         mAdapter.setMoives(movies);
 
@@ -146,6 +169,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
                             Log.d("Response: ", response.toString());
                             mAdapter.setMoives(moviesList.getResults());
                             mAdapter.notifyDataSetChanged();
+                            if (savedRecyclerLayoutState != null) {
+                                layoutManager.onRestoreInstanceState(savedRecyclerLayoutState);
+                            }
                             emptyView.setVisibility(View.INVISIBLE);
 
                         }
@@ -205,4 +231,5 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Lis
         startActivity(movieDeatail);
 
     }
+
 }

@@ -34,6 +34,9 @@ import com.kholoud.popularmovies.ui.adapters.TrailerAdapter;
 import com.kholoud.popularmovies.utils.Singletone;
 import com.kholoud.popularmovies.viewmodels.MovieViewModel;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.kholoud.popularmovies.ui.views.MainActivity.moivesdbBaseURL;
 import static com.kholoud.popularmovies.ui.views.MainActivity.moivesdb_apiKey;
 import static com.kholoud.popularmovies.ui.views.MainActivity.moviedbURL;
@@ -41,20 +44,43 @@ import static com.kholoud.popularmovies.ui.views.MainActivity.moviedbURL;
 public class MovieActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener {
 
     private static final String MY_PREFS_NAME = "MoviePref";
-    protected RecyclerView reviews;
-    protected RecyclerView trailer;
     MovieViewModel viewModel;
     private Movie selectedMovie;
     private Gson gson;
     private TrailerList trailerList;
-    private TextView reviewLable, trailerLabel;
-    private ReviewsList reviewsList;
     private SharedPreferences.Editor editor;
+    private ReviewsList reviewsList;
+
+    @BindView(R.id.movie_backdrop)
+    NetworkImageView backdrop_im;
+    @BindView(R.id.movie_poster_img)
+    NetworkImageView poster_img;
+    @BindView(R.id.movie_title)
+    TextView title;
+    @BindView(R.id.movie_rating)
+    TextView rating;
+    @BindView(R.id.movie_language)
+    TextView lang;
+    @BindView(R.id.movie_overview)
+    TextView overview;
+    @BindView(R.id.movie_releasedate)
+    TextView releaseDate;
+    @BindView(R.id.label_overview)
+    TextView reviewLable;
+    @BindView(R.id.label_trailers)
+    TextView trailerLabel;
+    @BindView(R.id.list_reviews)
+    RecyclerView reviews;
+    @BindView(R.id.list_trailers)
+    RecyclerView trailer;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
+        ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -154,19 +180,6 @@ public class MovieActivity extends AppCompatActivity implements TrailerAdapter.L
 
     //region UI Stuff
     private void initUI(Movie selectedMovie) {
-        NetworkImageView backdrop_im = findViewById(R.id.movie_backdrop);
-        NetworkImageView poster_img = findViewById(R.id.movie_poster_img);
-        TextView title = findViewById(R.id.movie_title);
-        TextView rating = findViewById(R.id.movie_rating);
-        TextView lang = findViewById(R.id.movie_language);
-        TextView overview = findViewById(R.id.movie_overview);
-        TextView releaseDate = findViewById(R.id.movie_releasedate);
-        backdrop_im = findViewById(R.id.movie_backdrop);
-        reviews = findViewById(R.id.list_reviews);
-        trailer = findViewById(R.id.list_trailers);
-        trailerLabel = findViewById(R.id.label_trailers);
-        reviewLable = findViewById(R.id.label_reviews);
-
 
         // RecycleView stuff
         // use a linearLayout manager
