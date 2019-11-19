@@ -1,0 +1,33 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.kholoud.popularmovies.test" >
+4
+5    <uses-sdk
+5-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:5:5-74
+6        android:minSdkVersion="25"
+6-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:5:15-41
+7        android:targetSdkVersion="29" />
+7-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:5:42-71
+8
+9    <instrumentation
+9-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:11:5-15:75
+10        android:name="androidx.test.runner.AndroidJUnitRunner"
+10-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:11:22-76
+11        android:functionalTest="false"
+11-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:14:22-52
+12        android:handleProfiling="false"
+12-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:13:22-53
+13        android:label="Tests for com.kholoud.popularmovies"
+13-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:15:22-73
+14        android:targetPackage="com.kholoud.popularmovies" />
+14-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:12:22-71
+15
+16    <application android:debuggable="true" >
+16-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:7:5-9:19
+16-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:7:18-43
+17        <uses-library android:name="android.test.runner" />
+17-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:8:9-60
+17-->/Users/kholoudali/AndroidStudioProjects/AND/PopularMovies/app/build/intermediates/tmp/manifest/androidTest/debug/manifestMerger3973576998446938921.xml:8:23-57
+18    </application>
+19
+20</manifest>
