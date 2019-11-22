@@ -25,7 +25,7 @@
             android:padding="10dp"
             android:scaleType="centerCrop"
             android:visibility="invisible"
-            ads:resize_mode="fill"
+            ads:resize_mode="fit"
             app:default_artwork="@drawable/ic_no_video" />
 
         <ImageView

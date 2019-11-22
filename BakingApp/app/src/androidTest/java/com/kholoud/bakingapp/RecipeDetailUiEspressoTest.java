@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.kholoud.bakingapp.model.Recipe;
 import com.kholoud.bakingapp.views.VideoStepsDetailActivity;
 import com.kholoud.bakingapp.views.VideoStepsDetailFragment;
@@ -19,8 +19,9 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AllOf.allOf;
 
 
@@ -54,6 +55,11 @@ public class RecipeDetailUiEspressoTest {
         onView(withId(R.id.step_des)).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void ExpoPlayerisDisplayed() {
+        onView(allOf(withId(R.id.exo_play),
+                withClassName(is(PlayerView.class.getName())))).check(matches(isDisplayed()));
+    }
 
 
 }

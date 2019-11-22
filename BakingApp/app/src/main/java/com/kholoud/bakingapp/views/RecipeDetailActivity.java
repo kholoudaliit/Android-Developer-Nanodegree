@@ -46,7 +46,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
     AppWidgetHostView appWidgetManager;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

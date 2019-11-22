@@ -1,8 +1,10 @@
 package com.kholoud.bakingapp.views;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBar;
 
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.kholoud.bakingapp.R;
@@ -39,6 +42,7 @@ public class VideoStepsDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items_detail);
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar);
         final CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
 
         setSupportActionBar(toolbar);
@@ -59,6 +63,19 @@ public class VideoStepsDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Full screen when the orientation changes
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            appBarLayout.setVisibility(View.GONE);
+            this.getSupportActionBar().hide();
+
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        }
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -69,7 +86,7 @@ public class VideoStepsDetailActivity extends AppCompatActivity {
         //
         // http://developer.android.com/guide/components/fragments.html
         //
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && step != null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
 
@@ -81,7 +98,7 @@ public class VideoStepsDetailActivity extends AppCompatActivity {
             VideoStepsDetailFragment fragment = new VideoStepsDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.items_detail_container, fragment)
+                    .replace(R.id.items_detail_container, fragment)
                     .commit();
         }
     }
