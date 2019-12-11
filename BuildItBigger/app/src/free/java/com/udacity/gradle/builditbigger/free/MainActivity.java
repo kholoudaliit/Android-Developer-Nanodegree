@@ -1,10 +1,12 @@
-package com.udacity.gradle.builditbigger;
+package com.udacity.gradle.builditbigger.free;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.udacity.gradle.builditbigger.R;
 
 
 public class MainActivity extends AppCompatActivity {

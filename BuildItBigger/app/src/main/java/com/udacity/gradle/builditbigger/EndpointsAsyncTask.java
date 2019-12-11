@@ -64,7 +64,6 @@ public class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
         // send it to android lib
         Intent intent = new Intent(this.context, com.kholoud.andlib.MainActivity.class);
         intent.putExtra("joke", result);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         context.startActivity(intent);
     }

@@ -1,27 +1,17 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Intent;
-
-import androidx.test.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.concurrent.TimeUnit;
-
-import static androidx.test.InstrumentationRegistry.getTargetContext;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -51,7 +41,8 @@ public class EndpointsAsyncTaskTest {
         String testJoke = testTask.get();
 
         assertNotNull(testJoke);
-        assertFalse(testJoke.isEmpty());
+        assertNotEquals("", testJoke);
+
 
     }
 
